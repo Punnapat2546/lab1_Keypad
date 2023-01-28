@@ -55,6 +55,12 @@ GPIO_PIN_6 }, { GPIOA, GPIO_PIN_7 } };
 
 uint16_t ButtonMatrix = 0;
 
+uint16_t current_button = 0;
+uint16_t last_button = 0;
+uint8_t press_status = 0;
+
+uint8_t digit_state = 0;//64340500066 = 11 digits
+
 
 /* USER CODE END PV */
 
@@ -113,10 +119,303 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  static uint32_t timestamp = 0;
-	  		if(HAL_GetTick() >= timestamp){
-	  			timestamp = HAL_GetTick() + 10;
-	  			ReadMatrixButton_1Row();
-	  		}
+	  if(HAL_GetTick() >= timestamp){
+		  timestamp = HAL_GetTick() + 10;
+		  ReadMatrixButton_1Row();
+	  }
+
+	  // check rising
+	  current_button = ButtonMatrix;
+	  if(current_button > 0 && last_button == 0){
+		  press_status = 1;
+	  }
+	  else{
+		  press_status = 0;
+	  }
+	  last_button = current_button;
+
+	  //button = current_button
+	  //0 = 8, 1 = 4, 2 = 64, 3 = 1024, 4 = 2, 5 = 32, 6 = 512, 7 = 1, 8 = 16, 9 = 256
+	  //clear = 4096, ok = 32768
+
+	  //digit_state
+	  //0 = , 1 = 6, 2 = 64, 3 = 643, 4 = 6434, 5 = 64340, 6 = 643405, 7 = 6434050, 8 = 64340500, 9 = 643405000, 10 = 6434050006, 11 = 64340500066
+	  //12 = wrong
+
+	  switch(digit_state){
+	  case 0:
+		  if(press_status == 1)
+		  {
+			  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
+			  if(current_button == 512) //6
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 1:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 2) //4
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 2:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 1024) //3
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 3:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 2) //4
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 4:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 8) //0
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 5:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 32) //5
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 6:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 8) //0
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 7:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 8) //0
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 8:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 8) //0
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 9:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 512) //6
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 10:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 512) //6
+			  {
+				  digit_state += 1;
+			  }
+			  else if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 11:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+				  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,1);
+				  digit_state = 0;
+			  }
+			  else //wrong
+			  {
+				  digit_state = 12;
+			  }
+		  }
+	  break;
+	  case 12:
+		  if(press_status == 1)
+		  {
+			  if(current_button == 4096) //clear
+			  {
+				  digit_state = 0;
+			  }
+			  else if(current_button == 32768) //ok
+			  {
+
+			  }
+			  else //wrong
+			  {
+			  }
+		  }
+	  break;
+
+
+
+
+	  }
+
+
   }
   /* USER CODE END 3 */
 }
