@@ -144,7 +144,7 @@ int main(void)
 
 	  switch(digit_state){
 	  case 0:
-		  if(press_status == 1)
+		  if(press_status == 1 && current_button != 128 && current_button != 2048 && current_button != 8192 && current_button != 16384)
 		  {
 			  HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,0);
 			  if(current_button == 512) //6
